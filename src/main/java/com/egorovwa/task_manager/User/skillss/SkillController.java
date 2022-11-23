@@ -16,17 +16,24 @@ public class SkillController {
     private final SkillService service;
 
     @PostMapping
-    public SkillFullDto createSkill(@Validated @RequestBody SkillCreateDto createDto) throws AlreadyExists {
-        return service.addNewSkill(createDto);
+    public SkillFullDto createSkill(
+            @Validated @RequestBody SkillCreateDto createDto,
+            @RequestHeader("x-User-id") long userId
+            ) throws AlreadyExists {
+        return service.addNewSkill(createDto, userId);
     }
     @GetMapping
     public Page<SkillFullDto> getAllSkills(
+            @RequestHeader("x-User-id") long maderId,
             @RequestParam(value = "from", defaultValue = "0") Integer from,
             @RequestParam(value = "size", defaultValue = "20") Integer size){
-        return service.getAllSkil(from, size);
+        return service.getAllSkil(from, size, maderId);
     }
     @GetMapping("/{id}")
-    public SkillFullDto getSkillById(@PathVariable("id") Long id) throws NotFoundException {
-        return service.getSkilById(id);
+    public SkillFullDto getSkillById(
+            @PathVariable("id") Long id,
+            @RequestHeader("x-User-id") long maderId
+    ) throws NotFoundException {
+        return service.getSkilById(id, maderId);
     }
 }

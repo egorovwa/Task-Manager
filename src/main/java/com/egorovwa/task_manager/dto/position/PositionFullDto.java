@@ -1,24 +1,23 @@
 package com.egorovwa.task_manager.dto.position;
 
-import jakarta.persistence.ManyToMany;
+import com.egorovwa.task_manager.User.model.Access;
+import com.egorovwa.task_manager.User.skillss.Skill;
+import com.egorovwa.task_manager.dto.skills.SkillShortDto;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.Collection;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PositionCreateDto {
-    @NotBlank
+public class PositionFullDto {
+    private Long id;
     private String title;
-    @Size(min = 5, max = 3000)
     private String description;
-    @NonNull
     private String access;
-    private Collection<Long> mustBeSkills;
+    private Collection<SkillShortDto> mustBeSkills;
 }
