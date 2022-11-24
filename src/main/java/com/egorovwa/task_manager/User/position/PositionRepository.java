@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
-    Page<PositionFullDto> findAll(Integer from, Integer size);
 }

@@ -19,6 +19,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
+    @Column(unique = true)
     private String title;
     private String description;
     @NonNull

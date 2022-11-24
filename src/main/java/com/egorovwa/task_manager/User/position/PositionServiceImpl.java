@@ -5,9 +5,12 @@ import com.egorovwa.task_manager.User.skillss.SkillService;
 import com.egorovwa.task_manager.Utils;
 import com.egorovwa.task_manager.dto.position.PositionCreateDto;
 import com.egorovwa.task_manager.dto.position.PositionFullDto;
+import com.egorovwa.task_manager.exceptions.AlreadyExists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,18 +21,24 @@ public class PositionServiceImpl implements PositionService {
     private final SkillService skillService;
 
     @Override
-    public PositionFullDto createPosition(PositionCreateDto createDto) {
-log.info("Position {} created ");
-        return PositionDtoMaper.toFullDto(repository.save(new Position(null, createDto.getTitle(),
-                createDto.getDescription(),
-                Utils.fromStrind(createDto.getAccess()),
-                skillService.findAllByIds(createDto.getMustBeSkills()) // TODO: 23.11.2022 if id not found hendle
-        )));
+    public PositionFullDto createPosition(PositionCreateDto createDto, Long maderId) throws AlreadyExists {
+        log.info("User id = {} create position name = {}", maderId, createDto.getTitle());
+        try {
+            return PositionDtoMaper.toFullDto(repository.save(new Position(null, createDto.getTitle(),
+                    createDto.getDescription(),
+                    Utils.fromStrind(createDto.getAccess()),
+                    skillService.findAllByIds(createDto.getMustBeSkills()) // TODO: 23.11.2022 if id not found hendle
+            )));
+        } catch (DataIntegrityViolationException e) {
+            log.debug("User id = {}.  An attempt to create a position called {}", maderId, createDto.getTitle());
+            throw new AlreadyExists("Position all redy exist.", "Position", "title", createDto.getTitle());
+        }
 
     }
 
     @Override
-    public Page<PositionFullDto> findAll(Integer from, Integer size) {
-        return repository.findAll(from, size);
+    public Page<PositionFullDto> findAll(Pageable pageable, Long maderId) {
+        log.debug("User id = {}. Requested all Position", maderId);
+        return repository.findAll(pageable).map(PositionDtoMaper::toFullDto);
     }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +32,9 @@ log.info("User id ={}. Creared new skill with title {}.", maderId, createDto.get
     }
 
     @Override
-    public Page<SkillFullDto> getAllSkil(Integer from, Integer size, long maderId) {
+    public Page<SkillFullDto> getAllSkil(Pageable pageable, long maderId) {
         log.debug("User id ={}, requested all Skils", maderId);
-        return repository.findAll(from, size).map(SkilllDtoMaper::toDtoFulDto);
+        return repository.findAll(pageable).map(SkilllDtoMaper::toDtoFulDto);
     }
 
     @Override
