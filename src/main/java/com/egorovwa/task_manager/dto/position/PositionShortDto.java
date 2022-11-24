@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class PositionShortDto {
     private Long id;
     private String title;
-    private String description;
 }

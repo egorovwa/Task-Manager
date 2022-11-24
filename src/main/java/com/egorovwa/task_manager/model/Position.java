@@ -1,4 +1,4 @@
-package com.egorovwa.task_manager.User.model;
+package com.egorovwa.task_manager.model;
 
 import com.egorovwa.task_manager.User.skillss.Skill;
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
 package com.egorovwa.task_manager.User.position;
 
-import com.egorovwa.task_manager.User.model.Position;
+import com.egorovwa.task_manager.model.Position;
 import com.egorovwa.task_manager.User.skillss.SkillService;
 import com.egorovwa.task_manager.Utils;
 import com.egorovwa.task_manager.dto.position.PositionCreateDto;
@@ -12,6 +12,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +42,10 @@ public class PositionServiceImpl implements PositionService {
     public Page<PositionFullDto> findAll(Pageable pageable, Long maderId) {
         log.debug("User id = {}. Requested all Position", maderId);
         return repository.findAll(pageable).map(PositionDtoMaper::toFullDto);
+    }
+
+    @Override
+    public Optional<Position> findById(Long id) {
+        return repository.findById(id);
     }
 }

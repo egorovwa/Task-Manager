@@ -1,15 +1,19 @@
-package com.egorovwa.task_manager.User.model;
+package com.egorovwa.task_manager.model;
 
 import com.egorovwa.task_manager.User.skillss.Skill;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User {
     @Id
@@ -28,4 +32,7 @@ public class User {
     private Collection<Skill> skills;
     @OneToMany
     private Collection<SkillDoc> documentSkil;
+    @ManyToMany
+    private Collection<Deportament> deportaments;
+
 }

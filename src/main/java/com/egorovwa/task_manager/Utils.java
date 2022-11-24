@@ -1,6 +1,6 @@
 package com.egorovwa.task_manager;
 
-import com.egorovwa.task_manager.User.model.Access;
+import com.egorovwa.task_manager.model.Access;
 import com.egorovwa.task_manager.exceptions.IncorrectPageValueException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
