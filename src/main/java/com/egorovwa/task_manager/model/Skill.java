@@ -1,4 +1,4 @@
-package com.egorovwa.task_manager.User.skillss;
+package com.egorovwa.task_manager.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

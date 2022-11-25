@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
 import static com.egorovwa.task_manager.Constats.MADER_ID_HEAD;
 
 @RestController
@@ -21,13 +24,13 @@ public class SkillController {
     @PostMapping
     public SkillFullDto createSkill(
             @Validated @RequestBody SkillCreateDto createDto,
-            @RequestHeader(MADER_ID_HEAD) long userId
+            @RequestHeader(MADER_ID_HEAD) UUID userId
             ) throws AlreadyExists {
         return service.addNewSkill(createDto, userId);
     }
     @GetMapping
     public Page<SkillFullDto> getAllSkills(
-            @RequestHeader(MADER_ID_HEAD) long maderId,
+            @RequestHeader(MADER_ID_HEAD) UUID maderId,
             @RequestParam(value = "from", defaultValue = "0") Integer from,
             @RequestParam(value = "size", defaultValue = "20") Integer size) throws IncorrectPageValueException {
         return service.getAllSkil(Utils.createPageable(from, size), maderId);
@@ -35,7 +38,7 @@ public class SkillController {
     @GetMapping("/{id}")
     public SkillFullDto getSkillById(
             @PathVariable("id") Long id,
-            @RequestHeader(MADER_ID_HEAD) long maderId
+            @RequestHeader(MADER_ID_HEAD) UUID maderId
     ) throws NotFoundException {
         return service.getSkilById(id, maderId);
     }

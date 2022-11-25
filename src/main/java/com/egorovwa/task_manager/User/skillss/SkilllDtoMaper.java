@@ -1,6 +1,6 @@
 package com.egorovwa.task_manager.User.skillss;
 
-import com.egorovwa.task_manager.User.skillss.Skill;
+import com.egorovwa.task_manager.model.Skill;
 import com.egorovwa.task_manager.dto.skills.SkillCreateDto;
 import com.egorovwa.task_manager.dto.skills.SkillFullDto;
 import com.egorovwa.task_manager.dto.skills.SkillShortDto;

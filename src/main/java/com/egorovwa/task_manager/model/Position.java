@@ -1,6 +1,5 @@
 package com.egorovwa.task_manager.model;
 
-import com.egorovwa.task_manager.User.skillss.Skill;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -27,4 +26,6 @@ public class Position {
     private Access access;
     @ManyToMany // TODO: 23.11.2022 may be not.
     private Collection<Skill> mustBeSkills;
+    @NonNull
+    Boolean isMustPresent;
 }

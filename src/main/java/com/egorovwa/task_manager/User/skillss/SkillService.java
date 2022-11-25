@@ -4,16 +4,18 @@ import com.egorovwa.task_manager.dto.skills.SkillCreateDto;
 import com.egorovwa.task_manager.dto.skills.SkillFullDto;
 import com.egorovwa.task_manager.exceptions.AlreadyExists;
 import com.egorovwa.task_manager.exceptions.NotFoundException;
+import com.egorovwa.task_manager.model.Skill;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public interface SkillService {
-    SkillFullDto addNewSkill(SkillCreateDto createDto, long maderId) throws AlreadyExists;
+    SkillFullDto addNewSkill(SkillCreateDto createDto, UUID maderId) throws AlreadyExists;
 
-    Page<SkillFullDto> getAllSkil(Pageable pageable, long maderId);
+    Page<SkillFullDto> getAllSkil(Pageable pageable, UUID maderId);
 
-    SkillFullDto getSkilById(Long id, long maderId) throws NotFoundException;
+    SkillFullDto getSkilById(Long id, UUID maderId) throws NotFoundException;
     Collection<Skill> findAllByIds(Collection<Long> ids);
 }

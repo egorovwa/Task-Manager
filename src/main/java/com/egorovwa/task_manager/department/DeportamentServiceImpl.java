@@ -1,5 +1,6 @@
 package com.egorovwa.task_manager.department;
 
+import com.egorovwa.task_manager.Constats;
 import com.egorovwa.task_manager.User.UserService;
 import com.egorovwa.task_manager.User.position.PositionService;
 import com.egorovwa.task_manager.dto.deportament.DeportamenCreateDto;
@@ -33,11 +34,20 @@ public class DeportamentServiceImpl implements DeportamentService {
     }
 
     @Override
-    public DeportamentFulldto createDepotrament(UUID maderId, DeportamenCreateDto createDto) throws PositionNotFoundException, UserNotFoundException, AlreadyExists {
+    public DeportamentFulldto createDepotrament(UUID maderId, DeportamenCreateDto createDto) throws PositionNotFoundException, UserNotFoundException, AlreadyExists, UserNotFreeException, PositionNotValidException {
         Position directorPosition = positionService.findById(createDto.getDirectorPositionId())
-                .orElseThrow(() -> new PositionNotFoundException("id", createDto.getDirectorPositionId().toString()));
+                .orElseThrow(() -> new PositionNotFoundException("id", createDto.getDirectorPositionId().toString()));  // TODO: 25.11.2022 Android creatr position fragmen -> create deportament fragment
+        if (!directorPosition.getIsMustPresent()) {
+            throw new PositionNotValidException("Position name = {} value isMustPresent must be true ", directorPosition);
+        }
         User director = userService.findByIdOptional(createDto.getDirectorId())
                 .orElseThrow(() -> new UserNotFoundException("id", createDto.getDirectorId().toString()));
+        if (director.getPosition().equals(Constats.FREE)) {
+            director.setPosition(directorPosition);
+            userService.updateUser(director);
+        } else {
+            throw new UserNotFreeException("User not free", director.getUuid());
+        }
         try {
             log.info("User id = {}. Create Deportament name = {}", maderId, createDto.getName());
             return DeportamentDtoMaper.toFullDto(deportamentRepository.save(
@@ -81,5 +91,15 @@ public class DeportamentServiceImpl implements DeportamentService {
     @Override
     public Optional<Deportament> findByIdOptional(Long id) {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Deportament> findByDirectorPosition(Position position) {
+        return deportamentRepository.findByDirectorPosition(position);
+    }
+
+    @Override
+    public void updateDeportament(Deportament r) {
+
     }
 }

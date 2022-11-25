@@ -15,7 +15,8 @@ public class PositionDtoMaper {
                 position.getTitle(),
                 position.getDescription(),
                 position.getAccess().toString(),
-                position.getMustBeSkills().stream().map(SkilllDtoMaper::toShortDto).collect(Collectors.toList()));
+                position.getMustBeSkills().stream().map(SkilllDtoMaper::toShortDto).collect(Collectors.toList()),
+                position.getIsMustPresent());
     }
 
     public static PositionShortDto toShortDto(Position position) {

@@ -15,4 +15,5 @@ public class PositionFullDto {
     private String description;
     private String access;
     private Collection<SkillShortDto> mustBeSkills;
+    private Boolean isMustPresent;
 }

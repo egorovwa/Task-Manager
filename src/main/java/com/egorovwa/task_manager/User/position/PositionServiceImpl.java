@@ -1,11 +1,11 @@
 package com.egorovwa.task_manager.User.position;
 
-import com.egorovwa.task_manager.model.Position;
 import com.egorovwa.task_manager.User.skillss.SkillService;
 import com.egorovwa.task_manager.Utils;
 import com.egorovwa.task_manager.dto.position.PositionCreateDto;
 import com.egorovwa.task_manager.dto.position.PositionFullDto;
 import com.egorovwa.task_manager.exceptions.AlreadyExists;
+import com.egorovwa.task_manager.model.Position;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,7 +29,8 @@ public class PositionServiceImpl implements PositionService {
             return PositionDtoMaper.toFullDto(repository.save(new Position(null, createDto.getTitle(),
                     createDto.getDescription(),
                     Utils.fromStrind(createDto.getAccess()),
-                    skillService.findAllByIds(createDto.getMustBeSkills()) // TODO: 23.11.2022 if id not found hendle
+                    skillService.findAllByIds(createDto.getMustBeSkills()), // TODO: 23.11.2022 if id not found hendle
+                    createDto.getIsMustPresent()
             )));
         } catch (DataIntegrityViolationException e) {
             log.debug("User id = {}.  An attempt to create a position called {}", maderId, createDto.getTitle());

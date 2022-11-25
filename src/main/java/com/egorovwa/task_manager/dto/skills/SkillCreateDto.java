@@ -16,6 +16,4 @@ public class SkillCreateDto {
     private String description;
     @NotNull
     private Boolean isRequiresConfirmation;
-    @NotBlank
-    private String identificationCard; // TODO: 24.11.2022 may be Class
 }

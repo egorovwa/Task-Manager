@@ -21,4 +21,5 @@ public class PositionCreateDto {
     @NonNull
     private String access;
     private Collection<Long> mustBeSkills;
+    private Boolean isMustPresent;
 }

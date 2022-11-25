@@ -2,10 +2,7 @@ package com.egorovwa.task_manager.department;
 
 import com.egorovwa.task_manager.dto.deportament.DeportamenCreateDto;
 import com.egorovwa.task_manager.dto.deportament.DeportamentFulldto;
-import com.egorovwa.task_manager.exceptions.AlreadyExists;
-import com.egorovwa.task_manager.exceptions.DeportamentNotFoundException;
-import com.egorovwa.task_manager.exceptions.PositionNotFoundException;
-import com.egorovwa.task_manager.exceptions.UserNotFoundException;
+import com.egorovwa.task_manager.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +20,7 @@ public class DeportamentController {
     public DeportamentFulldto createDeportament(
             @RequestHeader(MADER_ID_HEAD) UUID maderId,
             @RequestBody DeportamenCreateDto createDto
-    ) throws UserNotFoundException, PositionNotFoundException, AlreadyExists {
+    ) throws UserNotFoundException, PositionNotFoundException, AlreadyExists, PositionNotValidException, UserNotFreeException {
         return service.createDepotrament(maderId, createDto);
     }
 
@@ -32,7 +29,7 @@ public class DeportamentController {
             @PathVariable("deportamentId") Long deportamentId,
             @PathVariable("userId") UUID userId,
             @RequestHeader(MADER_ID_HEAD) UUID maderId
-    ) throws UserNotFoundException, DeportamentNotFoundException {
+    ) throws UserNotFoundException, DeportamentNotFoundException, NoActionRequired {
         service.addStaf(maderId, deportamentId, userId);
     }
     @PutMapping("/{deportamentId}/director/{userId}")

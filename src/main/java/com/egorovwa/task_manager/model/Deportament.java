@@ -28,7 +28,7 @@ public class Deportament {
     private User director;
     @OneToMany
     Collection<Deportament> subordinateDepartments;
-    @ManyToMany
+    @OneToMany
     private Collection<User> staff;
 
     public Deportament(String name, Position directorPosition, User director) {

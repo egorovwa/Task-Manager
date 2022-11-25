@@ -1,14 +1,12 @@
 package com.egorovwa.task_manager.User;
 
 import com.egorovwa.task_manager.User.position.PositionService;
-import com.egorovwa.task_manager.User.skillss.Skill;
+import com.egorovwa.task_manager.model.Skill;
 import com.egorovwa.task_manager.User.skillss.SkillService;
 import com.egorovwa.task_manager.department.DeportamentService;
 import com.egorovwa.task_manager.dto.user.UserCreateDto;
 import com.egorovwa.task_manager.dto.user.UserFullDto;
-import com.egorovwa.task_manager.exceptions.AlreadyExists;
-import com.egorovwa.task_manager.exceptions.DeportamentNotFoundException;
-import com.egorovwa.task_manager.exceptions.PositionNotFoundException;
+import com.egorovwa.task_manager.exceptions.*;
 import com.egorovwa.task_manager.model.Deportament;
 import com.egorovwa.task_manager.model.Position;
 import com.egorovwa.task_manager.model.User;
@@ -18,8 +16,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.egorovwa.task_manager.Constats.FREE_POSITION_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +32,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserFullDto createUser(Long maderId, UserCreateDto createDto) throws PositionNotFoundException, AlreadyExists, DeportamentNotFoundException {
-        Position position = positionService.findById(createDto.getPositionId())
-                .orElseThrow(() -> new PositionNotFoundException("id", createDto.getPositionId().toString()));
+    public UserFullDto createUser(UUID maderId, UserCreateDto createDto) throws PositionNotFoundException, AlreadyExists, DeportamentNotFoundException {
+        Position position = positionService.findById(FREE_POSITION_ID)
+                .orElseThrow(() -> new PositionNotFoundException("id", FREE_POSITION_ID.toString())); // TODO: 25.11.2022 Android - create_user fragment -> user_to-position fragment 
         Collection<Skill> skills = skillService.findAllByIds(createDto.getSkills()); // TODO: 25.11.2022 when error hendler create
 
         Deportament deportaments = deportamentService.findByIdOptional(createDto.getDeportamentIds())
@@ -66,5 +67,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public UserFullDto putUserToPosition(UUID maderId, UUID userId, Long positionId) throws UserNotFoundException, PositionNotFoundException, IllegalActionException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("id", userId.toString()));
+        Position position = positionService.findById(positionId)
+                .orElseThrow(() -> new PositionNotFoundException("id", positionId.toString()));
+        if (user.getPosition().getIsMustPresent()) {
+            throw new IllegalActionException(String.format("User %s is in position %s which should be submitted",
+                    userId, user.getPosition().getId()), "putUserToPosition", Map.of(
+                    "position", String.valueOf(user.getPosition().getId()),
+                    userId.toString(), userId.toString()));
+        }
+        user.setPosition(position);
+        userRepository.save(user);
+        deportamentService.findByDirectorPosition(position)
+                .ifPresent(r->{
+                    r.getDirector().setPosition(positionService.findById(FREE_POSITION_ID)
+                            .orElseThrow());
+                    r.setDirector(user);
+                    deportamentService.updateDeportament(r);
+                });
+
+        return UserDtoMaper.toFullDto(user);
     }
 }

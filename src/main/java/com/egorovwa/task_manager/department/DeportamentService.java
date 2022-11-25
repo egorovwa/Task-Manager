@@ -4,6 +4,7 @@ import com.egorovwa.task_manager.dto.deportament.DeportamenCreateDto;
 import com.egorovwa.task_manager.dto.deportament.DeportamentFulldto;
 import com.egorovwa.task_manager.exceptions.*;
 import com.egorovwa.task_manager.model.Deportament;
+import com.egorovwa.task_manager.model.Position;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -11,10 +12,13 @@ import java.util.UUID;
 public interface DeportamentService {
     DeportamentFulldto findById(Long r, UUID maderId) throws DeportamentNotFoundException;
 
-    DeportamentFulldto createDepotrament(UUID maderId, DeportamenCreateDto createDto) throws PositionNotFoundException, UserNotFoundException, AlreadyExists;
+    DeportamentFulldto createDepotrament(UUID maderId, DeportamenCreateDto createDto) throws PositionNotFoundException, UserNotFoundException, AlreadyExists, UserNotFreeException, PositionNotValidException;
 
     void addStaf(UUID maderId, Long deportamentId, UUID userId) throws DeportamentNotFoundException, UserNotFoundException, NoActionRequired;
 
     void chengeDirector(UUID maderId, Long deportamentId, UUID userId);
     Optional<Deportament> findByIdOptional(Long id);
+    Optional<Deportament> findByDirectorPosition(Position position);
+
+    void updateDeportament(Deportament r);
 }
