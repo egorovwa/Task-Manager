@@ -2,6 +2,7 @@ package com.egorovwa.task_manager.User;
 
 import com.egorovwa.task_manager.dto.user.UserCreateDto;
 import com.egorovwa.task_manager.dto.user.UserFullDto;
+import com.egorovwa.task_manager.exceptions.PositionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class UserController {
     public UserFullDto createUser(
             @RequestHeader(MADER_ID_HEAD) Long maderId,
             @Validated @RequestBody UserCreateDto createDto
-    ) {
+    ) throws PositionNotFoundException {
         return service.createUser(maderId, createDto);
     }
 

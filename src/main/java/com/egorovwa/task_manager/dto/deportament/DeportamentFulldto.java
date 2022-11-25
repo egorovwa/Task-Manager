@@ -22,7 +22,7 @@ public class DeportamentFulldto {
     private String name;
     private UserShortDto director;
     @OneToMany
-    Collection<Deportament> subordinateDepartments;
+    Collection<DeportamentShortDto> subordinateDepartments;
     @ManyToMany
-    private Collection<User> staff;
+    private Collection<UserShortDto> staff;
 }

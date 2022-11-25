@@ -20,6 +20,5 @@ public class UserCreateDto {
     private Long positionId;
     private Collection<Long> skills;
     private Collection<SkillDoc> documentSkil;
-    @Size(min = 1)
-    private Collection<Long> deportamentIds;
+    private Long deportamentIds;
 }

@@ -32,7 +32,7 @@ public class User {
     private Collection<Skill> skills;
     @OneToMany
     private Collection<SkillDoc> documentSkil;
-    @ManyToMany
-    private Collection<Deportament> deportaments;
+    @ManyToOne
+    private Deportament deportaments;
 
 }
