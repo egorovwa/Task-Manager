@@ -4,6 +4,7 @@ import com.egorovwa.task_manager.dto.skills.SkillCreateDto;
 import com.egorovwa.task_manager.dto.skills.SkillFullDto;
 import com.egorovwa.task_manager.exceptions.AlreadyExists;
 import com.egorovwa.task_manager.exceptions.NotFoundException;
+import com.egorovwa.task_manager.exceptions.SkillNotFoundException;
 import com.egorovwa.task_manager.model.Skill;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,10 @@ log.info("User id ={}. Creared new skill with title {}.", maderId, createDto.get
         return SkilllDtoMaper.toDtoFulDto(repository.findById(id)
                 .orElseThrow(()-> new  NotFoundException("Skill", "id", id.toString(),"Not found "))); // TODO: 23.11.2022 afte exception hende
 
+    }
+    @Override
+    public Skill getSkilById(Long id) throws NotFoundException {
+        return repository.findById(id).orElseThrow(()->new SkillNotFoundException("id", id.toString()));
     }
 
     @Override

@@ -17,5 +17,8 @@ public interface SkillService {
     Page<SkillFullDto> getAllSkil(Pageable pageable, UUID maderId);
 
     SkillFullDto getSkilById(Long id, UUID maderId) throws NotFoundException;
+
+    Skill getSkilById(Long id) throws NotFoundException;
+
     Collection<Skill> findAllByIds(Collection<Long> ids);
 }

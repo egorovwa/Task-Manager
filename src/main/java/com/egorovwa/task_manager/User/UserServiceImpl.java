@@ -1,15 +1,15 @@
 package com.egorovwa.task_manager.User;
 
 import com.egorovwa.task_manager.User.position.PositionService;
-import com.egorovwa.task_manager.model.Skill;
+import com.egorovwa.task_manager.User.skilldoc.SkillDocDtoMaper;
+import com.egorovwa.task_manager.User.skilldoc.SkillDocService;
+import com.egorovwa.task_manager.dto.skills.SkillDocFullDto;
+import com.egorovwa.task_manager.model.*;
 import com.egorovwa.task_manager.User.skillss.SkillService;
 import com.egorovwa.task_manager.department.DeportamentService;
 import com.egorovwa.task_manager.dto.user.UserCreateDto;
 import com.egorovwa.task_manager.dto.user.UserFullDto;
 import com.egorovwa.task_manager.exceptions.*;
-import com.egorovwa.task_manager.model.Deportament;
-import com.egorovwa.task_manager.model.Position;
-import com.egorovwa.task_manager.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final SkillService skillService;
     private final DeportamentService deportamentService;
     private final UserRepository userRepository;
+    private final SkillDocService skillDocService;
 
     @Override
     public UserFullDto createUser(UUID maderId, UserCreateDto createDto) throws PositionNotFoundException, AlreadyExists, DeportamentNotFoundException {
@@ -92,5 +93,17 @@ public class UserServiceImpl implements UserService {
                 });
 
         return UserDtoMaper.toFullDto(user);
+    }
+
+    @Override
+    public UserFullDto addSkill(UUID maderId, UUID userId, Long skillId, Optional<SkillDocFullDto> mayBeSkillDoc) throws NotFoundException, SkillRequiresConfirmationException {
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("id", userId.toString()));
+        Skill skill = skillService.getSkilById(skillId);
+        if (skill.getIsRequiresConfirmation()){
+            SkillDoc skillDoc = SkillDocDtoMaper.fromFullDto(mayBeSkillDoc
+                    .orElseThrow(()->new SkillRequiresConfirmationException(userId, skillId)));
+            skillDocService.addSkilDoc(maderId, skillDoc);
+
+        }
     }
 }
