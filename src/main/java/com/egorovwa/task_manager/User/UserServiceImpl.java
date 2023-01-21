@@ -3,13 +3,13 @@ package com.egorovwa.task_manager.User;
 import com.egorovwa.task_manager.User.position.PositionService;
 import com.egorovwa.task_manager.User.skilldoc.SkillDocDtoMaper;
 import com.egorovwa.task_manager.User.skilldoc.SkillDocService;
-import com.egorovwa.task_manager.dto.skills.SkillDocFullDto;
-import com.egorovwa.task_manager.model.*;
 import com.egorovwa.task_manager.User.skillss.SkillService;
 import com.egorovwa.task_manager.department.DeportamentService;
+import com.egorovwa.task_manager.dto.skills.SkillDocFullDto;
 import com.egorovwa.task_manager.dto.user.UserCreateDto;
 import com.egorovwa.task_manager.dto.user.UserFullDto;
 import com.egorovwa.task_manager.exceptions.*;
+import com.egorovwa.task_manager.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -76,16 +76,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("id", userId.toString()));
         Position position = positionService.findById(positionId)
                 .orElseThrow(() -> new PositionNotFoundException("id", positionId.toString()));
-        if (user.getPosition().getIsMustPresent()) {
-            throw new IllegalActionException(String.format("User %s is in position %s which should be submitted",
-                    userId, user.getPosition().getId()), "putUserToPosition", Map.of(
-                    "position", String.valueOf(user.getPosition().getId()),
-                    userId.toString(), userId.toString()));
-        }
+
         user.setPosition(position);
         userRepository.save(user);
         deportamentService.findByDirectorPosition(position)
-                .ifPresent(r->{
+                .ifPresent(r -> {
                     r.getDirector().setPosition(positionService.findById(FREE_POSITION_ID)
                             .orElseThrow());
                     r.setDirector(user);
@@ -97,13 +92,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFullDto addSkill(UUID maderId, UUID userId, Long skillId, Optional<SkillDocFullDto> mayBeSkillDoc) throws NotFoundException, SkillRequiresConfirmationException {
-        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException("id", userId.toString()));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("id", userId.toString()));
         Skill skill = skillService.getSkilById(skillId);
-        if (skill.getIsRequiresConfirmation()){
+        if (skill.getIsRequiresConfirmation()) {
             SkillDoc skillDoc = SkillDocDtoMaper.fromFullDto(mayBeSkillDoc
-                    .orElseThrow(()->new SkillRequiresConfirmationException(userId, skillId)));
+                    .orElseThrow(() -> new SkillRequiresConfirmationException(userId, skillId)));
             skillDocService.addSkilDoc(maderId, skillDoc);
-
         }
+        user.getSkills().add(skill);
+        return UserDtoMaper.toFullDto(userRepository.save(user));
     }
 }
