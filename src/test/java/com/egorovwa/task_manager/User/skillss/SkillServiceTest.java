@@ -35,7 +35,7 @@ class SkillServiceTest {
         Skill skillWithId = new Skill(1L,"title", "description", false);
         when(skillRepository.save(skill))
                 .thenReturn(skillWithId);
-        skillService.addNewSkill(skillCreateDto, UUID.randomUUID());
+        skillService.addNewSkill(skillCreateDto, 1L);
         verify(skillRepository,times(1)).save(skill);
 
     }
@@ -47,6 +47,7 @@ class SkillServiceTest {
         Page<Skill> page = new PageImpl<>(List.of(skill));
         when(skillRepository.findAll(pageable))
                 .thenReturn(page);
+        assertEquals(page.map(SkilllDtoMaper::toDtoFulDto), skillService.getAllSkil(pageable,1L));
 
     }
 

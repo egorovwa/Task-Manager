@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +15,8 @@ import java.util.UUID;
 @Entity
 public class User {
     @Id
-    private UUID uuid;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long userId;
     @NotBlank
     private String surname;
     @NotBlank

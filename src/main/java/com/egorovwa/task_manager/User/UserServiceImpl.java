@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             return UserDtoMaper.toFullDto(userRepository.save(new User(
-                    UUID.randomUUID(),          // TODO: 24.11.2022 может в конструктор класса
+                    null,
                     createDto.getSurname(),
                     createDto.getName(),
                     createDto.getIdentificationСard(),
@@ -60,10 +60,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public Optional<User> findByIdOptional(UUID id) {
-        return userRepository.findById(id);
-    }
 
     @Override
     public void updateUser(User user) {

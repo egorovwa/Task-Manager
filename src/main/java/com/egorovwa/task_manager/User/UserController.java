@@ -30,7 +30,7 @@ public class UserController {
         return service.createUser(maderId, createDto);
     }
 
-    @PutMapping
+    @PutMapping("/{userId}/position")
     public UserFullDto putOnPosition(
             @RequestHeader(MADER_ID_HEAD) UUID maderId,
             @PathVariable("userId") UUID userId,
@@ -39,7 +39,7 @@ public class UserController {
         return service.putUserToPosition(maderId, userId, positionId);
     }
 
-    @PutMapping
+    @PutMapping("/{userId}/skill")
     public UserFullDto addScill(
             @RequestHeader(MADER_ID_HEAD) UUID maderId,
             @PathVariable("userId") UUID userId,

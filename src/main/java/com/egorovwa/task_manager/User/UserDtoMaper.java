@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class UserDtoMaper {
     public static UserFullDto toFullDto(User user) {
         return new UserFullDto(
-                user.getUuid(),
+                user.getUserId(),
                 user.getSurname(),
                 user.getName(),
                 PositionDtoMaper.toShortDto(user.getPosition()),
@@ -19,6 +19,6 @@ public class UserDtoMaper {
     }
 
     public static UserShortDto toShortDto(User user) {
-        return new UserShortDto(user.getUuid(), user.getSurname(), user.getName(), user.getPosition().getTitle());
+        return new UserShortDto(user.getUserId(), user.getSurname(), user.getName(), user.getPosition().getTitle());
     }
 }

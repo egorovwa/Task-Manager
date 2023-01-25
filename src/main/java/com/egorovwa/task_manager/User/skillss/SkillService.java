@@ -12,11 +12,11 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface SkillService {
-    SkillFullDto addNewSkill(SkillCreateDto createDto, UUID maderId) throws AlreadyExists;
+    SkillFullDto addNewSkill(SkillCreateDto createDto, Long maderId) throws AlreadyExists;
 
-    Page<SkillFullDto> getAllSkil(Pageable pageable, UUID maderId);
+    Page<SkillFullDto> getAllSkil(Pageable pageable, Long maderId);
 
-    SkillFullDto getSkilById(Long id, UUID maderId) throws NotFoundException;
+    SkillFullDto getSkilById(Long id, Long maderId) throws NotFoundException;
 
     Skill getSkilById(Long id) throws NotFoundException;
 

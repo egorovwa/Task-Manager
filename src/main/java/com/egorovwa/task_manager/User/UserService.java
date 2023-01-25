@@ -12,7 +12,6 @@ import java.util.UUID;
 
 public interface UserService {
     UserFullDto createUser(UUID maderId, UserCreateDto createDto) throws PositionNotFoundException, AlreadyExists, DeportamentNotFoundException;
-    Optional<User> findByIdOptional(UUID id);
 
     void updateUser(User user);
 

@@ -24,7 +24,7 @@ public class SkillServiceImpl implements SkillService {
     private final SkillRepository repository;
     @Override
     @Transactional
-    public SkillFullDto addNewSkill(SkillCreateDto createDto, UUID maderId) throws AlreadyExists {
+    public SkillFullDto addNewSkill(SkillCreateDto createDto, Long maderId) throws AlreadyExists {
 log.info("User id ={}. Creared new skill with title {}.", maderId, createDto.getTitle());
         try {
             return SkilllDtoMaper.toDtoFulDto(repository.save(SkilllDtoMaper.fromCreateDto(createDto)));
@@ -35,13 +35,13 @@ log.info("User id ={}. Creared new skill with title {}.", maderId, createDto.get
     }
 
     @Override
-    public Page<SkillFullDto> getAllSkil(Pageable pageable, UUID maderId) {
+    public Page<SkillFullDto> getAllSkil(Pageable pageable, Long maderId) {
         log.debug("User id ={}, requested all Skils", maderId);
         return repository.findAll(pageable).map(SkilllDtoMaper::toDtoFulDto);
     }
 
     @Override
-    public SkillFullDto getSkilById(Long id, UUID maderId) throws NotFoundException {
+    public SkillFullDto getSkilById(Long id, Long maderId) throws NotFoundException {
         log.debug("User id = {}, requested Skill id = {}", maderId, id);
         return SkilllDtoMaper.toDtoFulDto(repository.findById(id)
                 .orElseThrow(()-> new  NotFoundException("Skill", "id", id.toString(),"Not found "))); // TODO: 23.11.2022 afte exception hende

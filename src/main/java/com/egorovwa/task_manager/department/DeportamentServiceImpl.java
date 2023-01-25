@@ -1,7 +1,7 @@
 package com.egorovwa.task_manager.department;
 
 import com.egorovwa.task_manager.Constats;
-import com.egorovwa.task_manager.User.UserService;
+import com.egorovwa.task_manager.User.UserRepository;
 import com.egorovwa.task_manager.User.position.PositionService;
 import com.egorovwa.task_manager.dto.deportament.DeportamenCreateDto;
 import com.egorovwa.task_manager.dto.deportament.DeportamentFulldto;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Slf4j
 public class DeportamentServiceImpl implements DeportamentService {
     private final DeportamentRepository deportamentRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final PositionService positionService;
 
     @Override
@@ -40,13 +40,14 @@ public class DeportamentServiceImpl implements DeportamentService {
         if (!directorPosition.getIsMustPresent()) {
             throw new PositionNotValidException("Position name = {} value isMustPresent must be true ", directorPosition);
         }
-        User director = userService.findByIdOptional(createDto.getDirectorId())
+        User director = userRepository.findById(createDto.getDirectorId())
                 .orElseThrow(() -> new UserNotFoundException("id", createDto.getDirectorId().toString()));
         if (director.getPosition().equals(Constats.FREE)) {
             director.setPosition(directorPosition);
-            userService.updateUser(director);
+            userRepository.save(director);
+            log.debug("User = {} saved :DeportamentService", director);
         } else {
-            throw new UserNotFreeException("User not free", director.getUuid());
+            throw new UserNotFreeException("User not free", director.getUserId());
         }
         try {
             log.info("User id = {}. Create Deportament name = {}", maderId, createDto.getName());
@@ -68,7 +69,7 @@ public class DeportamentServiceImpl implements DeportamentService {
     public void addStaf(UUID maderId, Long deportamentId, UUID userId) throws DeportamentNotFoundException, UserNotFoundException, NoActionRequired {
         Deportament deportament = deportamentRepository.findById(deportamentId)
                 .orElseThrow(() -> new DeportamentNotFoundException("id", deportamentId.toString()));
-        User user = userService.findByIdOptional(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("id", userId.toString()));
         if (deportament.getStaff().contains(user)){
             throw new NoActionRequired(String.format("User id= %s alredy in deportament id = %s",userId, deportamentId));
@@ -79,8 +80,8 @@ public class DeportamentServiceImpl implements DeportamentService {
         deportament.getStaff().add(user);
         deportamentRepository.save(deportament);
         user.setDeportaments(deportament);
-        userService.updateUser(user);
-
+        userRepository.save(user);
+        log.debug("User = {} saved :DeportamentService", user);
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserFullDto { // TODO: 24.11.2022 Вероятно изменить
-    private UUID uuid;
+    private Long userId;
     private String surname;
     private String name;
     private PositionShortDto position;

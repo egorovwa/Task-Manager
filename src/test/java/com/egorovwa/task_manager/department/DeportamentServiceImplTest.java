@@ -36,7 +36,7 @@ class DeportamentServiceImplTest {
             Access.GENERAL,
             List.of(),
             false);
-    User director = new User(UUID.randomUUID(),"f", "name", "0000", position, List.of(),List.of(),null);
+    User director = new User(1L,"f", "name", "0000", position, List.of(),List.of(),null);
 
 
 
